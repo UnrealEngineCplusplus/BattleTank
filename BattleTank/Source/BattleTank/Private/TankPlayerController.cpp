@@ -2,7 +2,8 @@
 
 
 #include "TankPlayerController.h"
-
+#include "BattleTank.h"
+#include "GameFramework/PlayerController.h"
 
 
 void ATankPlayerController::BeginPlay()
@@ -15,7 +16,7 @@ void ATankPlayerController::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("PlayerController Not Possessing a Tank"));
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController possessing: %s"), *(ControlledTank -> GetName()));
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController possessing: %s"), *(ControlledTank->GetName()));
 	}
 }
 
@@ -35,7 +36,45 @@ void ATankPlayerController::AimTowardsCrosshair()
 {
 	if (!GetControlledTank()) { return; }
 
-	//Get worl loaction if linetrace through crosshair
-	//if it hits the landscape
-		//tell controlle tank to aim
+	FVector HitLocation; // Out paramameter
+	if (GetSightRayHitLocation(HitLocation)) // has sideeffect, is going to line trace
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Lookdirection:%s"), *HitLocation.ToString());
+
+			//TODOtell controlle tank to aim
+	}
+}
+
+//Get worl loaction if linetrace through crosshair, true if it hits the landscape
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
+{
+	//Find the crosshair position in pixel coordinates
+	int32 ViewportSizeX, ViewportSizeY;
+
+	ATankPlayerController::GetViewportSize(ViewportSizeX, ViewportSizeY);
+	auto ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
+
+	// "De-project" the screen posostion of the crosshori to a world direction
+	FVector LookDirection;
+	if (GetLookDirection(ScreenLocation, LookDirection))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Look direction: %s"), *LookDirection.ToString());
+	}
+
+
+	//line-trace along that look direction, and see what we hit(up to max range)
+	return true;
+}
+
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
+{
+	
+	FVector CameraWorldLocation; // to be discarded
+	 return ATankPlayerController::DeprojectScreenPositionToWorld(
+		ScreenLocation.X,
+		ScreenLocation.Y,
+		CameraWorldLocation,
+		LookDirection
+	);
+
 }
