@@ -3,6 +3,7 @@
 #include "TankAimingComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStaticsTypes.h"
 #include "Tank.h"
 
@@ -19,8 +20,16 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) { return; }
 	Barrel = BarrelToSet;
 }
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	if (!TurretToSet) { return; }
+	Turret = TurretToSet;
+}
+
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
@@ -64,7 +73,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 	//UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *DeltaRotator.ToString());
 
-	Barrel->Elevate(DeltaRotator.Pitch); // todo remove magic number
+	Barrel->Elevate(DeltaRotator.Pitch); 
 }
 
 
