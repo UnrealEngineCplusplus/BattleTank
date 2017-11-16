@@ -3,7 +3,9 @@
 
 #include "TankPlayerController.h"
 #include "BattleTank.h"
+#include "Tank.h"
 #include "GameFramework/PlayerController.h"
+
 
 
 void ATankPlayerController::BeginPlay()
