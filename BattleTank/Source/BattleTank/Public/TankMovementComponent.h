@@ -24,6 +24,9 @@ public:
 
 	UFUNCTION(BluePrintCallable, Category = "Input")
 		void IntendTurnRight(float Throw);
+
+	UFUNCTION(BluePrintCallable, Category = "Input")
+		void IntendTurnLeft(float Throw);
 	
 private:
 	// Called from the pathfinding logic by the AI controllers
